@@ -31,6 +31,7 @@ public class EntryController
         return entryDao.getAllCategories();
     }
 
+//@TODO change this to a proper id stuff
     @GetMapping("{categoryId}")
     public ResponseEntity<Entry> getById(@PathVariable int categoryId)
     {
@@ -42,8 +43,8 @@ public class EntryController
         }
     }
 
-    // the url to return all products in category 1 would look like this
-    // https://localhost:8080/categories/1/products
+//@TODO We don't need this method
+    // https://localhost:8080/entries/1/products
     @GetMapping("{categoryId}/products")
     public List<Product> getProductsById(@PathVariable int categoryId)
     {
