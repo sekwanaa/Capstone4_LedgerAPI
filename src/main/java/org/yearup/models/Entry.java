@@ -9,6 +9,9 @@ public class Entry
     public Entry()
     {
     }
+    public static void HelloWorld() {
+        System.out.print("Hello Alica");
+    }
 
     public Entry(int categoryId, String name, String description)
     {
