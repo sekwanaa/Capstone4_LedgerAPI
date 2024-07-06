@@ -1,5 +1,6 @@
 package org.yearup.data.mysql;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.yearup.data.EntryDao;
 import org.yearup.models.Entry;
@@ -14,6 +15,7 @@ import java.util.List;
 @Component
 public class MySqlEntryDao extends MySqlDaoBase implements EntryDao
 {
+    @Autowired
     public MySqlEntryDao(DataSource dataSource)
     {
         super(dataSource);
@@ -131,20 +133,12 @@ public class MySqlEntryDao extends MySqlDaoBase implements EntryDao
 
     private Entry mapRow(ResultSet row) throws SQLException
     {
-//@TODO Pull the correct information from the ResultSet
         int entryId = row.getInt("entry_id");
         String description = row.getString("description");
         String vendor = row.getString("vendor");
         BigDecimal amount = row.getBigDecimal("amount");
 
-        return new Entry()
-        {{
-//@TODO Set the proper fields in the Entry Model.
-            setCategoryId(entryId);
-            setVendor(vendor);
-            setDescription(description);
-            setAmount(amount);
-        }};
+        return new Entry(entryId, description, vendor, amount);
     }
 
 }
