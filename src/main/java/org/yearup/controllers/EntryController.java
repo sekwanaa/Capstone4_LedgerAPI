@@ -64,22 +64,22 @@ public class EntryController
         try {
             return entryDao.createEntry(entry);
         } catch (Exception ex){
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Add category didn't work");
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Add entry didn't work");
         }
     }
 
-    @PutMapping("/{categoryId}")
+    @PutMapping("/{entryId}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public void updateEntry(@PathVariable int entryId, @RequestBody Entry entry)
     {
         try {
             entryDao.updateEntry(entryId, entry);
         } catch (Exception ex){
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Update category didn't work");
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Update entry didn't work");
         }
     }
 
-    @DeleteMapping("/{categoryId}")
+    @DeleteMapping("/{entryId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public void deleteEntry(@PathVariable int entryId)
@@ -93,7 +93,7 @@ public class EntryController
             entryDao.deleteEntry(entryId);
         }
         catch (Exception ex) {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Delete category didn't work!");
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Delete entry didn't work!");
         }
     }
 }
