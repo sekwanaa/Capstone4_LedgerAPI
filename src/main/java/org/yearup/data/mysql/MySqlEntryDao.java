@@ -1,14 +1,13 @@
 package org.yearup.data.mysql;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.yearup.data.EntryDao;
 import org.yearup.models.Entry;
 
 import javax.sql.DataSource;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.math.BigDecimal;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,16 +15,17 @@ import java.util.List;
 @Component
 public class MySqlEntryDao extends MySqlDaoBase implements EntryDao
 {
+    @Autowired
     public MySqlEntryDao(DataSource dataSource)
     {
         super(dataSource);
     }
 
     @Override
-    public List<Entry> getAllCategories()
+    public List<Entry> searchEntries()
     {
-        List<Entry> categories = new ArrayList<>();
-        String query = "SELECT * FROM categories";
+        List<Entry> entries = new ArrayList<>();
+        String query = "SELECT * FROM entries";
 
         try (Connection connection = getConnection()) {
             PreparedStatement ps = connection.prepareStatement(query);
@@ -34,22 +34,22 @@ public class MySqlEntryDao extends MySqlDaoBase implements EntryDao
 
             while (resultSet.next()) {
                 Entry entry = mapRow(resultSet);
-                categories.add(entry);
+                entries.add(entry);
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-        return categories;
+        return entries;
     }
 
     @Override
-    public Entry getById(int categoryId)
+    public Entry getEntryById(int id)
     {
-        String query = "SELECT * FROM categories WHERE category_id = ?";
+        String query = "SELECT * FROM entries WHERE entry_id = ?";
 
         try (Connection connection = getConnection()) {
             PreparedStatement ps = connection.prepareStatement(query);
-            ps.setInt(1, categoryId);
+            ps.setInt(1, id);
 
             ResultSet resultSet = ps.executeQuery();
 
@@ -63,38 +63,49 @@ public class MySqlEntryDao extends MySqlDaoBase implements EntryDao
     }
 
     @Override
-    public Entry create(Entry category)
+    public Entry createEntry(Entry entry)
     {
-        String deleteSQL = "INSERT INTO categories (category_id, name, description) VALUES (?, ?, ?)";
+//TODO Figure out what information I need to insert into the database. Make date and time optional.
+        String createSQL = "INSERT INTO entries (entry_id, description, vendor, amount) VALUES (?, ?, ?, ?)";
 
         try (Connection connection = getConnection()) {
-            PreparedStatement ps = connection.prepareStatement(deleteSQL);
+            PreparedStatement ps = connection.prepareStatement(createSQL, Statement.RETURN_GENERATED_KEYS);
 
-            ps.setInt(1, category.getCategoryId());
-            ps.setString(2, category.getName());
-            ps.setString(3, category.getDescription());
+            ps.setInt(1, entry.getEntryId());
+            ps.setString(2, entry.getDescription());
+            ps.setString(3, entry.getVendor());
+            ps.setBigDecimal(4, entry.getAmount());
 
             ps.executeUpdate();
+
+            ResultSet newEntryKey = ps.getGeneratedKeys();
+
+            if (newEntryKey.next()) {
+                return getEntryById(newEntryKey.getInt("entry_id"));
+            }
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-        return category;
+        return null;
     }
 
     @Override
-    public void update(int categoryId, Entry category)
+    public void updateEntry(int entryId, Entry entry)
     {
-        String sql = "UPDATE categories" +
-                " SET name = ? " +
-                "   , description = ? " +
-                " WHERE category_id = ?;";
+//TODO Make sure the proper fields are getting updated.
+        String sql = "UPDATE entries" +
+                " SET description = ? " +
+                "   , vendor = ? " +
+                "   , amount = ? " +
+                " WHERE entry_id = ?;";
 
         try (Connection connection = getConnection())
         {
             PreparedStatement statement = connection.prepareStatement(sql);
-            statement.setString(1, category.getName());
-            statement.setString(2, category.getDescription());
-            statement.setInt(3, categoryId);
+            statement.setString(1, entry.getDescription());
+            statement.setString(2, entry.getVendor());
+            statement.setBigDecimal(3, entry.getAmount());
+            statement.setInt(4, entryId);
 
             statement.executeUpdate();
         }
@@ -105,14 +116,14 @@ public class MySqlEntryDao extends MySqlDaoBase implements EntryDao
     }
 
     @Override
-    public void delete(int categoryId)
+    public void deleteEntry(int entryId)
     {
-        String deleteSQL = "DELETE FROM categories WHERE category_id = ?";
+        String deleteSQL = "DELETE FROM entries WHERE entry_id = ?";
 
         try (Connection connection = getConnection()) {
             PreparedStatement ps = connection.prepareStatement(deleteSQL);
 
-            ps.setInt(1, categoryId);
+            ps.setInt(1, entryId);
 
             ps.executeUpdate();
         } catch (SQLException e) {
@@ -122,18 +133,12 @@ public class MySqlEntryDao extends MySqlDaoBase implements EntryDao
 
     private Entry mapRow(ResultSet row) throws SQLException
     {
-//@TODO Pull the correct information from the ResultSet
-        int categoryId = row.getInt("category_id");
-        String name = row.getString("name");
+        int entryId = row.getInt("entry_id");
         String description = row.getString("description");
+        String vendor = row.getString("vendor");
+        BigDecimal amount = row.getBigDecimal("amount");
 
-        return new Entry()
-        {{
-//@TODO Set the proper fields in the Entry Model.
-            setCategoryId(categoryId);
-            setName(name);
-            setDescription(description);
-        }};
+        return new Entry(entryId, description, vendor, amount);
     }
 
 }

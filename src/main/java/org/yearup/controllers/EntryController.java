@@ -28,14 +28,14 @@ public class EntryController
     @GetMapping("")
     public List<Entry> getAll()
     {
-        return entryDao.getAllCategories();
+        return entryDao.searchEntries();
     }
 
 //@TODO change this to a proper id stuff
     @GetMapping("{categoryId}")
     public ResponseEntity<Entry> getById(@PathVariable int categoryId)
     {
-        Entry category = entryDao.getById(categoryId);
+        Entry category = entryDao.getEntryById(categoryId);
         if (category == null) {
             return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
         } else {

@@ -5,9 +5,9 @@ import java.util.List;
 
 public interface EntryDao
 {
-    List<Entry> getAllCategories();
-    Entry getById(int categoryId);
-    Entry create(Entry category);
-    void update(int categoryId, Entry category);
-    void delete(int categoryId);
+    List<Entry> searchEntries();
+    Entry getEntryById(int id);
+    Entry createEntry(Entry entry);
+    void updateEntry(int id, Entry entry);
+    void deleteEntry(int id);
 }

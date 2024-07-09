@@ -1,52 +1,50 @@
 package org.yearup.models;
 
-public class Entry
-{
-    private int categoryId;
-    private String name;
+import java.math.BigDecimal;
+
+public class Entry {
+    private int entryId;
     private String description;
+    private String vendor;
+    private BigDecimal amount;
 
-    public Entry()
-    {
-    }
-    public static void HelloWorld() {
-        System.out.print("Hello Alica");
-    }
 
-    public Entry(int categoryId, String name, String description)
-    {
-        this.categoryId = categoryId;
-        this.name = name;
+    public Entry(int entryId, String description, String vendor, BigDecimal amount) {
+        this.entryId = entryId;
         this.description = description;
+        this.vendor = vendor;
+        this.amount = amount;
     }
 
-    public int getCategoryId()
-    {
-        return categoryId;
+    public int getEntryId() {
+        return entryId;
     }
 
-    public void setCategoryId(int categoryId)
-    {
-        this.categoryId = categoryId;
+    public void setEntryId(int entryId) {
+        this.entryId = entryId;
     }
 
-    public String getName()
-    {
-        return name;
-    }
-
-    public void setName(String name)
-    {
-        this.name = name;
-    }
-
-    public String getDescription()
-    {
+    public String getDescription() {
         return description;
     }
 
-    public void setDescription(String description)
-    {
+    public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getVendor() {
+        return vendor;
+    }
+
+    public void setVendor(String vendor) {
+        this.vendor = vendor;
+    }
+
+    public BigDecimal getAmount() {
+        return amount;
+    }
+
+    public void setAmount(BigDecimal amount) {
+        this.amount = amount;
     }
 }
