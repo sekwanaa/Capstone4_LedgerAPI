@@ -26,6 +26,7 @@ public class EntryController
 
 //@TODO Make this work with entries, not categories.
     @GetMapping("")
+    @RequestMapping("") //n
     public List<Entry> getAll()
     {
         return entryDao.searchEntries();
@@ -33,6 +34,7 @@ public class EntryController
 
 //@TODO change this to a proper id stuff
     @GetMapping("{categoryId}")
+    @RequestMapping("") //n
     public ResponseEntity<Entry> getById(@PathVariable int categoryId)
     {
         Entry category = entryDao.getEntryById(categoryId);
@@ -46,6 +48,7 @@ public class EntryController
 //@TODO We don't need this method
     // https://localhost:8080/entries/1/products
     @GetMapping("{categoryId}/products")
+    @RequestMapping("") //n
     public List<Product> getProductsById(@PathVariable int categoryId)
     {
         try {
