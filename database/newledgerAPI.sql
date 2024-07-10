@@ -21,11 +21,11 @@ CREATE SCHEMA IF NOT EXISTS `newledgerapi` DEFAULT CHARACTER SET utf8mb4 COLLATE
 USE `newledgerapi` ;
 
 -- -----------------------------------------------------
--- Table `newledgerapi`.`entry`
+-- Table `newledgerapi`.`entries`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `newledgerapi`.`entry` ;
+DROP TABLE IF EXISTS `newledgerapi`.`entries` ;
 
-CREATE TABLE IF NOT EXISTS `newledgerapi`.`entry` (
+CREATE TABLE IF NOT EXISTS `newledgerapi`.`entries` (
   `entry_id` INT NOT NULL AUTO_INCREMENT,
   `datetime` DATETIME NULL DEFAULT CURRENT_TIMESTAMP,
   `description` TEXT NULL DEFAULT NULL,
