@@ -131,6 +131,55 @@ public class MySqlEntryDao extends MySqlDaoBase implements EntryDao
         }
     }
 
+    //Custom Query Search
+    public List<Entry> searchEntriesByCriteria(String description, String vendor, BigDecimal minAmount, BigDecimal maxAmount)
+    {
+        List<Entry> entries = new ArrayList<>();
+        StringBuilder query = new StringBuilder("SELECT * FROM entries WHERE 1=1");
+
+        if (description != null && !description.isEmpty()) {
+            query.append(" AND description LIKE ?");
+        }
+        if (vendor != null && !vendor.isEmpty()) {
+            query.append(" AND vendor LIKE ?");
+        }
+        if (minAmount != null) {
+            query.append(" AND amount >= ?");
+        }
+        if (maxAmount != null) {
+            query.append(" AND amount <= ?");
+        }
+
+        try (Connection connection = getConnection()) {
+            PreparedStatement ps = connection.prepareStatement(query.toString());
+
+            int paramIndex = 1;
+            if (description != null && !description.isEmpty()) {
+                ps.setString(paramIndex++, "%" + description + "%");
+            }
+            if (vendor != null && !vendor.isEmpty()) {
+                ps.setString(paramIndex++, "%" + vendor + "%");
+            }
+            if (minAmount != null) {
+                ps.setBigDecimal(paramIndex++, minAmount);
+            }
+            if (maxAmount != null) {
+                ps.setBigDecimal(paramIndex++, maxAmount);
+            }
+
+            ResultSet resultSet = ps.executeQuery();
+
+            while (resultSet.next()) {
+                Entry entry = mapRow(resultSet);
+                entries.add(entry);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return entries;
+    }
+
+
     private Entry mapRow(ResultSet row) throws SQLException
     {
         int entryId = row.getInt("entry_id");
