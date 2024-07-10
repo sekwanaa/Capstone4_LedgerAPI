@@ -11,20 +11,16 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-//@TODO Fix this to make it work with Entries, not the categories.
 @Component
-public class MySqlEntryDao extends MySqlDaoBase implements EntryDao
-{
+public class MySqlEntryDao extends MySqlDaoBase implements EntryDao {
     @Autowired
-    public MySqlEntryDao(DataSource dataSource)
-    {
+    public MySqlEntryDao(DataSource dataSource) {
         super(dataSource);
     }
 
     @Override
-    public List<Entry> searchEntry(String description, String vendor, BigDecimal minAmount, BigDecimal maxAmount)
-    {
-        List<Entry> entry = new ArrayList<>();
+    public List<Entry> searchEntries(String description, String vendor, BigDecimal minAmount, BigDecimal maxAmount) {
+        List<Entry> entries = new ArrayList<>();
         StringBuilder query = new StringBuilder("SELECT * FROM entry WHERE 1=1");
 
         if (description != null && !description.isEmpty()) {
@@ -61,17 +57,16 @@ public class MySqlEntryDao extends MySqlDaoBase implements EntryDao
 
             while (resultSet.next()) {
                 Entry entry = mapRow(resultSet);
-                entry.add(entry);
+                entries.add(entry);
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-        return entry;
+        return entries;
     }
 
 
-    private Entry mapRow(ResultSet row) throws SQLException
-    {
+    private Entry mapRow(ResultSet row) throws SQLException {
         int entryId = row.getInt("entry_id");
         String description = row.getString("description");
         String vendor = row.getString("vendor");
@@ -80,11 +75,9 @@ public class MySqlEntryDao extends MySqlDaoBase implements EntryDao
         return new Entry(entryId, description, vendor, amount);
     }
 
-}
 
     @Override
-    public Entry getEntryById(int id)
-    {
+    public Entry getEntryById(int id) {
         String query = "SELECT * FROM entries WHERE entry_id = ?";
 
         try (Connection connection = getConnection()) {
@@ -103,8 +96,7 @@ public class MySqlEntryDao extends MySqlDaoBase implements EntryDao
     }
 
     @Override
-    public Entry createEntry(Entry entry)
-    {
+    public Entry createEntry(Entry entry) {
 //TODO Figure out what information I need to insert into the database. Make date and time optional.
         String createSQL = "INSERT INTO entries (entry_id, description, vendor, amount) VALUES (?, ?, ?, ?)";
 
@@ -130,8 +122,7 @@ public class MySqlEntryDao extends MySqlDaoBase implements EntryDao
     }
 
     @Override
-    public void updateEntry(int entryId, Entry entry)
-    {
+    public void updateEntry(int entryId, Entry entry) {
 //TODO Make sure the proper fields are getting updated.
         String sql = "UPDATE entries" +
                 " SET description = ? " +
@@ -139,8 +130,7 @@ public class MySqlEntryDao extends MySqlDaoBase implements EntryDao
                 "   , amount = ? " +
                 " WHERE entry_id = ?;";
 
-        try (Connection connection = getConnection())
-        {
+        try (Connection connection = getConnection()) {
             PreparedStatement statement = connection.prepareStatement(sql);
             statement.setString(1, entry.getDescription());
             statement.setString(2, entry.getVendor());
@@ -148,16 +138,13 @@ public class MySqlEntryDao extends MySqlDaoBase implements EntryDao
             statement.setInt(4, entryId);
 
             statement.executeUpdate();
-        }
-        catch (SQLException e)
-        {
+        } catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }
 
     @Override
-    public void deleteEntry(int entryId)
-    {
+    public void deleteEntry(int entryId) {
         String deleteSQL = "DELETE FROM entries WHERE entry_id = ?";
 
         try (Connection connection = getConnection()) {
@@ -170,5 +157,6 @@ public class MySqlEntryDao extends MySqlDaoBase implements EntryDao
             throw new RuntimeException(e);
         }
     }
+}
 
 
