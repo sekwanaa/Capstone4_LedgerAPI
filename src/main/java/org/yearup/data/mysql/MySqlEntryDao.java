@@ -21,7 +21,7 @@ public class MySqlEntryDao extends MySqlDaoBase implements EntryDao {
     @Override
     public List<Entry> searchEntries(String description, String vendor, BigDecimal minAmount, BigDecimal maxAmount) {
         List<Entry> entries = new ArrayList<>();
-        StringBuilder query = new StringBuilder("SELECT * FROM entry WHERE 1=1");
+        StringBuilder query = new StringBuilder("SELECT * FROM entries WHERE 1=1");
 
         if (description != null && !description.isEmpty()) {
             query.append(" AND description LIKE ?");
