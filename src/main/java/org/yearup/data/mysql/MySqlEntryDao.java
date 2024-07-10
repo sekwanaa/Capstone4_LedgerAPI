@@ -81,7 +81,6 @@ public class MySqlEntryDao extends MySqlDaoBase implements EntryDao {
                         ps.setObject(paramIndex, date.plusDays(1));
                     }
                 }
-                System.out.println(date.with(firstDayOfMonth));
             }
 
             ResultSet resultSet = ps.executeQuery();
