@@ -22,25 +22,65 @@ public class MySqlEntryDao extends MySqlDaoBase implements EntryDao
     }
 
     @Override
-    public List<Entry> searchEntries()
+    public List<Entry> searchEntry(String description, String vendor, BigDecimal minAmount, BigDecimal maxAmount)
     {
-        List<Entry> entries = new ArrayList<>();
-        String query = "SELECT * FROM entries";
+        List<Entry> entry = new ArrayList<>();
+        StringBuilder query = new StringBuilder("SELECT * FROM entry WHERE 1=1");
+
+        if (description != null && !description.isEmpty()) {
+            query.append(" AND description LIKE ?");
+        }
+        if (vendor != null && !vendor.isEmpty()) {
+            query.append(" AND vendor LIKE ?");
+        }
+        if (minAmount != null) {
+            query.append(" AND amount >= ?");
+        }
+        if (maxAmount != null) {
+            query.append(" AND amount <= ?");
+        }
 
         try (Connection connection = getConnection()) {
-            PreparedStatement ps = connection.prepareStatement(query);
+            PreparedStatement ps = connection.prepareStatement(query.toString());
+
+            int paramIndex = 1;
+            if (description != null && !description.isEmpty()) {
+                ps.setString(paramIndex++, "%" + description + "%");
+            }
+            if (vendor != null && !vendor.isEmpty()) {
+                ps.setString(paramIndex++, "%" + vendor + "%");
+            }
+            if (minAmount != null) {
+                ps.setBigDecimal(paramIndex++, minAmount);
+            }
+            if (maxAmount != null) {
+                ps.setBigDecimal(paramIndex++, maxAmount);
+            }
 
             ResultSet resultSet = ps.executeQuery();
 
             while (resultSet.next()) {
                 Entry entry = mapRow(resultSet);
-                entries.add(entry);
+                entry.add(entry);
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-        return entries;
+        return entry;
     }
+
+
+    private Entry mapRow(ResultSet row) throws SQLException
+    {
+        int entryId = row.getInt("entry_id");
+        String description = row.getString("description");
+        String vendor = row.getString("vendor");
+        BigDecimal amount = row.getBigDecimal("amount");
+
+        return new Entry(entryId, description, vendor, amount);
+    }
+
+}
 
     @Override
     public Entry getEntryById(int id)
@@ -131,14 +171,4 @@ public class MySqlEntryDao extends MySqlDaoBase implements EntryDao
         }
     }
 
-    private Entry mapRow(ResultSet row) throws SQLException
-    {
-        int entryId = row.getInt("entry_id");
-        String description = row.getString("description");
-        String vendor = row.getString("vendor");
-        BigDecimal amount = row.getBigDecimal("amount");
 
-        return new Entry(entryId, description, vendor, amount);
-    }
-
-}
