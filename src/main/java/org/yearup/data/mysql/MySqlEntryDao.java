@@ -8,6 +8,9 @@ import org.yearup.models.Entry;
 import javax.sql.DataSource;
 import java.math.BigDecimal;
 import java.sql.*;
+import java.time.LocalDate;
+import java.time.temporal.TemporalAdjuster;
+import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,7 +22,7 @@ public class MySqlEntryDao extends MySqlDaoBase implements EntryDao {
     }
 
     @Override
-    public List<Entry> searchEntries(String description, String vendor, BigDecimal minAmount, BigDecimal maxAmount) {
+    public List<Entry> searchEntries(String description, String vendor, BigDecimal minAmount, BigDecimal maxAmount, String customReport) {
         List<Entry> entries = new ArrayList<>();
         StringBuilder query = new StringBuilder("SELECT * FROM entries WHERE 1=1");
 
@@ -34,6 +37,9 @@ public class MySqlEntryDao extends MySqlDaoBase implements EntryDao {
         }
         if (maxAmount != null) {
             query.append(" AND amount <= ?");
+        }
+        if (customReport != null && !customReport.isEmpty()) {
+            query.append(" AND datetime BETWEEN ? AND ?");
         }
 
         try (Connection connection = getConnection()) {
@@ -51,6 +57,31 @@ public class MySqlEntryDao extends MySqlDaoBase implements EntryDao {
             }
             if (maxAmount != null) {
                 ps.setBigDecimal(paramIndex++, maxAmount);
+            }
+            if (customReport != null && !customReport.isEmpty()) {
+                LocalDate date = LocalDate.now();
+                TemporalAdjuster firstDayOfYear = TemporalAdjusters.firstDayOfYear();
+                TemporalAdjuster firstDayOfMonth = TemporalAdjusters.firstDayOfMonth();
+
+                switch (customReport) {
+                    case "Previous Year" -> {
+                        ps.setObject(paramIndex++, date.minusYears(1).with(firstDayOfYear));
+                        ps.setObject(paramIndex, date.with(firstDayOfYear));
+                    }
+                    case "YTD" -> {
+                        ps.setObject(paramIndex++, date.with(firstDayOfYear));
+                        ps.setObject(paramIndex, date.plusMonths(1));
+                    }
+                    case "Previous Month" -> {
+                        ps.setObject(paramIndex++, date.minusMonths(1).with(firstDayOfMonth));
+                        ps.setObject(paramIndex, date.with(firstDayOfMonth));
+                    }
+                    case "MTD" -> {
+                        ps.setObject(paramIndex++, date.with(firstDayOfMonth));
+                        ps.setObject(paramIndex, date.plusDays(1));
+                    }
+                }
+                System.out.println(date.with(firstDayOfMonth));
             }
 
             ResultSet resultSet = ps.executeQuery();

@@ -1,16 +1,15 @@
-{{#entries}}
-<div class="entry">
-	<div>
-		<h4>{{entryId}}</h4>
-		<div>
-			<p>
-				Description: {{description}}
-				<br />
-				Vendor: {{vendor}}
-				<br />
-				Amount: {{amount}}
-			</p>
+<div id="entryTable">
+	<h2>Entries</h2>
+	<div id="entries">
+		{{#entries}}
+		<div class="entry">
+			<div id="entryInfo">
+				<span>{{entryId}}</span>
+				<span>Description: {{description}}</span>
+				<span>Vendor: {{vendor}}</span>
+				<span>Amount: ${{amount}}</span>
+			</div>
 		</div>
+		{{/entries}}
 	</div>
 </div>
-{{/entries}}

@@ -40,14 +40,14 @@ class EntryService {
 					qs = maxA
 				}
 			}
-			// if (this.filter.filter) {
-			// 	const fil = `color=${this.filter.filter}`
-			// 	if (qs.length > 0) {
-			// 		qs += `&${fil}`
-			// 	} else {
-			// 		qs = fil
-			// 	}
-			// }
+			if (this.filter.filter) {
+				const fil = `custom=${this.filter.filter}`
+				if (qs.length > 0) {
+					qs += `&${fil}`
+				} else {
+					qs = fil
+				}
+			}
 
 			return qs.length > 0 ? `?${qs}` : ''
 		},

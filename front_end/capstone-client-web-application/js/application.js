@@ -14,15 +14,6 @@ function login() {
 	hideModalForm()
 }
 
-// function showImageDetailForm(entry, imageUrl) {
-// 	const imageDetail = {
-// 		name: entry,
-// 		imageUrl: imageUrl,
-// 	}
-
-// 	templateBuilder.build('image-detail', imageDetail, 'login')
-// }
-
 function loadHome() {
 	templateBuilder.build('home', {}, 'main')
 
@@ -77,7 +68,7 @@ function setMaxAmount(control) {
 	const label = document.getElementById('max-amount-display')
 	label.innerText = control.value
 
-	const value = control.value != 1000000 ? control.value : ''
+	const value = control.value != 10000 ? control.value : ''
 	entryService.addMaxPriceFilter(value)
 	entryService.search()
 }
