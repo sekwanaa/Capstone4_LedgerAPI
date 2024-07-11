@@ -82,14 +82,41 @@ class EntryService {
 		axios
 			.get(url)
 			.then(response => {
-				let data = {}
-				data.entries = response.data
+				let data = {
+					entries: response.data.map((entry, index) => ({
+						...entry,
+						index: index + 1, // If you want 1-based index
+					})),
+				}
 
 				templateBuilder.build('entries', data, 'content')
 			})
 			.catch(error => {
 				const data = {
 					error: 'Searching entries failed.',
+				}
+
+				templateBuilder.append('error', data, 'errors')
+			})
+	}
+
+	deleteEntry(entryId) {
+		const url = `${config.baseUrl}/entries/${entryId}`
+
+		axios
+			.delete(url, {
+				withCredentials: false, // This helps with CORS issues if credentials are needed
+				headers: {
+					'Content-Type': 'application/json',
+					// Add any other necessary headers here, e.g., authentication tokens
+				},
+			})
+			.then(response => {
+				this.search()
+			})
+			.catch(error => {
+				const data = {
+					error: `Failed to delete entry ${entryId}`,
 				}
 
 				templateBuilder.append('error', data, 'errors')

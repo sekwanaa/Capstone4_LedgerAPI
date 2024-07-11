@@ -73,6 +73,10 @@ function setMaxAmount(control) {
 	entryService.search()
 }
 
+function deleteEntry(entryId) {
+	entryService.deleteEntry(entryId)
+}
+
 function closeError(control) {
 	setTimeout(() => {
 		control.click()
