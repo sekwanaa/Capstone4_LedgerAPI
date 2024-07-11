@@ -80,3 +80,98 @@ COLLATE = utf8mb4_0900_ai_ci;
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
+
+
+-- -----------------------------------------------------
+-- UNCOMMENT THIS IF YOU WANT FILLER DATA
+-- -----------------------------------------------------
+
+-- INSERT INTO `newledgerapi`.`entries` (`description`, `vendor`, `amount`)
+-- VALUES ('Office furniture', 'IKEA', 2199.99);
+
+-- INSERT INTO `newledgerapi`.`entries` (`description`, `vendor`, `amount`)
+-- VALUES ('Server maintenance', 'Dell', 5670.00);
+
+-- INSERT INTO `newledgerapi`.`entries` (`description`, `vendor`, `amount`)
+-- VALUES ('Employee training', 'Udemy', 999.00);
+
+-- INSERT INTO `newledgerapi`.`entries` (`description`, `vendor`, `amount`)
+-- VALUES ('Travel expenses', 'American Airlines', 1234.56);
+
+-- INSERT INTO `newledgerapi`.`entries` (`description`, `vendor`, `amount`)
+-- VALUES ('Advertising', 'Google Ads', 3500.00);
+
+-- INSERT INTO `newledgerapi`.`entries` (`description`, `vendor`, `amount`)
+-- VALUES ('Legal consultation', 'Smith & Associates', 2000.00);
+
+-- INSERT INTO `newledgerapi`.`entries` (`description`, `vendor`, `amount`)
+-- VALUES ('Office rent', 'City Center Real Estate', 5000.00);
+
+-- INSERT INTO `newledgerapi`.`entries` (`description`, `vendor`, `amount`)
+-- VALUES ('Utilities', 'PowerCo', 789.45);
+
+-- INSERT INTO `newledgerapi`.`entries` (`description`, `vendor`, `amount`)
+-- VALUES ('Company vehicles', 'Toyota', 45000.00);
+
+-- INSERT INTO `newledgerapi`.`entries` (`description`, `vendor`, `amount`)
+-- VALUES ('Catering for event', 'Tasty Bites', 1500.75);
+
+-- INSERT INTO `newledgerapi`.`entries` (`description`, `vendor`, `amount`)
+-- VALUES ('IT equipment', 'Best Buy', 3789.50);
+
+-- INSERT INTO `newledgerapi`.`entries` (`description`, `vendor`, `amount`)
+-- VALUES ('Insurance premium', 'SafeGuard Insurance', 2500.00);
+
+-- INSERT INTO `newledgerapi`.`entries` (`description`, `vendor`, `amount`)
+-- VALUES ('Employee benefits', 'HealthPlus', 10000.00);
+
+-- INSERT INTO `newledgerapi`.`entries` (`description`, `vendor`, `amount`)
+-- VALUES ('Office cleaning', 'CleanPro Services', 450.00);
+
+-- INSERT INTO `newledgerapi`.`entries` (`description`, `vendor`, `amount`)
+-- VALUES ('Software development tools', 'JetBrains', 799.00);
+
+-- INSERT INTO `newledgerapi`.`entries` (`description`, `vendor`, `amount`)
+-- VALUES ('Conference tickets', 'TechCon 2024', 2999.99);
+
+-- INSERT INTO `newledgerapi`.`entries` (`description`, `vendor`, `amount`)
+-- VALUES ('Printer ink', 'Office Depot', 345.67);
+
+-- INSERT INTO `newledgerapi`.`entries` (`description`, `vendor`, `amount`)
+-- VALUES ('Team building event', 'Adventure Zone', 1200.00);
+
+-- INSERT INTO `newledgerapi`.`entries` (`description`, `vendor`, `amount`)
+-- VALUES ('Shipping costs', 'FedEx', 567.89);
+
+-- INSERT INTO `newledgerapi`.`entries` (`description`, `vendor`, `amount`)
+-- VALUES ('Website redesign', 'WebWizards Inc', 7500.00);
+
+-- INSERT INTO `newledgerapi`.`entries` (`description`, `vendor`, `amount`)
+-- VALUES ('Customer refund', 'John Doe', 99.99);
+
+-- INSERT INTO `newledgerapi`.`entries` (`description`, `vendor`, `amount`)
+-- VALUES ('Cybersecurity audit', 'SecureNet Solutions', 4000.00);
+
+-- INSERT INTO `newledgerapi`.`entries` (`description`, `vendor`, `amount`)
+-- VALUES ('Holiday party expenses', 'Party Planet', 3000.00);
+
+-- INSERT INTO `newledgerapi`.`entries` (`description`, `vendor`, `amount`)
+-- VALUES ('Subscription service', 'Adobe Creative Cloud', 599.88);
+
+-- INSERT INTO `newledgerapi`.`entries` (`description`, `vendor`, `amount`)
+-- VALUES ('Office plants', 'Green Thumb Nursery', 250.00);
+
+-- INSERT INTO `newledgerapi`.`entries` (`description`, `vendor`, `amount`)
+-- VALUES ('Parking fees', 'City Parking Authority', 200.00);
+
+-- INSERT INTO `newledgerapi`.`entries` (`description`, `vendor`, `amount`)
+-- VALUES ('Professional membership', 'Industry Association', 350.00);
+
+-- INSERT INTO `newledgerapi`.`entries` (`description`, `vendor`, `amount`)
+-- VALUES ('Employee awards', 'Trophy World', 500.00);
+
+-- INSERT INTO `newledgerapi`.`entries` (`description`, `vendor`, `amount`)
+-- VALUES ('Charitable donation', 'Local Food Bank', 1000.00);
+
+-- INSERT INTO `newledgerapi`.`entries` (`description`, `vendor`, `amount`)
+-- VALUES ('Recruitment agency fees', 'TalentHunters', 5000.00);
