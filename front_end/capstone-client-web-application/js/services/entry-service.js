@@ -87,6 +87,7 @@ class EntryService {
 						...entry,
 						index: index + 1, // If you want 1-based index
 					})),
+					length: response.data.length,
 				}
 
 				templateBuilder.build('entries', data, 'content')

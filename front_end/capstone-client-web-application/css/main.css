@@ -46,6 +46,7 @@ main {
 	grid-template-columns: 350px auto;
 	margin-top: 15px;
 	height: 87vh;
+	font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 main > .filter-box {
@@ -109,6 +110,17 @@ main > .content-form .cart-item {
 	overflow: hidden;
 }
 
+#entryHeader {
+	display: flex;
+	justify-content: space-between;
+	padding-right: 30px;
+}
+
+#entryHeader > button {
+	font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+	font-size: 14pt;
+}
+
 #entries {
 	flex-grow: 1;
 	overflow-y: auto;
@@ -129,6 +141,19 @@ main > .content-form .cart-item {
 	min-width: 100px;
 	margin-left: 10px;
 	margin-right: 10px;
+}
+
+@keyframes fade {
+	0% {
+		background-color: white;
+	}
+	100% {
+		background-color: rgb(207, 207, 207);
+	}
+}
+
+.entry:hover {
+	animation: fade 300ms ease-in-out forwards;
 }
 
 .entry {
