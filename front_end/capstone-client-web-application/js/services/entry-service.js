@@ -101,6 +101,33 @@ class EntryService {
 			})
 	}
 
+	createEntry(description, vendor, amount) {
+		const url = `${config.baseUrl}/entries`
+		console.log(description, vendor, amount)
+		axios
+			.post(url, {
+				withCredentials: false, // This helps with CORS issues if credentials are needed
+				headers: {
+					'Content-Type': 'application/json',
+					// Add any other necessary headers here, e.g., authentication tokens
+				},
+				entryId: 0,
+				description: description,
+				vendor: vendor,
+				amount: amount,
+			})
+			.then(response => {
+				this.search()
+			})
+			.catch(error => {
+				const data = {
+					error: `Failed to create entry`,
+				}
+
+				templateBuilder.append('error', data, 'errors')
+			})
+	}
+
 	deleteEntry(entryId) {
 		const url = `${config.baseUrl}/entries/${entryId}`
 

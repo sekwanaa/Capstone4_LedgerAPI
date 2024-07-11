@@ -128,22 +128,21 @@ public class MySqlEntryDao extends MySqlDaoBase implements EntryDao {
     @Override
     public Entry createEntry(Entry entry) {
 //TODO Figure out what information I need to insert into the database. Make date and time optional.
-        String createSQL = "INSERT INTO entries (entry_id, description, vendor, amount) VALUES (?, ?, ?, ?)";
+        String createSQL = "INSERT INTO entries (description, vendor, amount) VALUES (?, ?, ?)";
 
         try (Connection connection = getConnection()) {
             PreparedStatement ps = connection.prepareStatement(createSQL, Statement.RETURN_GENERATED_KEYS);
 
-            ps.setInt(1, entry.getEntryId());
-            ps.setString(2, entry.getDescription());
-            ps.setString(3, entry.getVendor());
-            ps.setBigDecimal(4, entry.getAmount());
+            ps.setString(1, entry.getDescription());
+            ps.setString(2, entry.getVendor());
+            ps.setBigDecimal(3, entry.getAmount());
 
             ps.executeUpdate();
 
             ResultSet newEntryKey = ps.getGeneratedKeys();
 
             if (newEntryKey.next()) {
-                return getEntryById(newEntryKey.getInt("entry_id"));
+                return getEntryById(newEntryKey.getInt(1));
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);

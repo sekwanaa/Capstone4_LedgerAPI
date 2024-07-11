@@ -2,8 +2,8 @@ function showLoginForm() {
 	templateBuilder.build('login-form', {}, 'login')
 }
 
-function hideModalForm() {
-	templateBuilder.clear('login')
+function hideModalForm(type) {
+	templateBuilder.clear(type)
 }
 
 function login() {
@@ -11,7 +11,7 @@ function login() {
 	const password = document.getElementById('password').value
 
 	userService.login(username, password)
-	hideModalForm()
+	hideModalForm('login')
 }
 
 function loadHome() {
@@ -71,6 +71,19 @@ function setMaxAmount(control) {
 	const value = control.value != 10000 ? control.value : ''
 	entryService.addMaxPriceFilter(value)
 	entryService.search()
+}
+
+function showNewEntryModal() {
+	templateBuilder.build('newEntryForm', {}, 'newEntry')
+}
+
+function createEntry() {
+	const description = document.getElementById('description').value
+	const vendor = document.getElementById('vendor').value
+	const amount = document.getElementById('amount').value
+
+	entryService.createEntry(description, vendor, amount)
+	hideModalForm('newEntry')
 }
 
 function deleteEntry(entryId) {
