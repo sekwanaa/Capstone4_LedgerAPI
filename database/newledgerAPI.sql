@@ -28,9 +28,9 @@ DROP TABLE IF EXISTS `newledgerapi`.`entries` ;
 CREATE TABLE IF NOT EXISTS `newledgerapi`.`entries` (
   `entry_id` INT NOT NULL AUTO_INCREMENT,
   `datetime` DATETIME NULL DEFAULT CURRENT_TIMESTAMP,
-  `description` TEXT NULL DEFAULT NOT NULL,
-  `vendor` VARCHAR(255) NULL DEFAULT NOT NULL,
-  `amount` VARCHAR(255) NULL DEFAULT NOT NULL,
+  `description` TEXT NOT NULL,
+  `vendor` VARCHAR(255) NOT NULL,
+  `amount` VARCHAR(255) NOT NULL,
   PRIMARY KEY (`entry_id`))
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4
