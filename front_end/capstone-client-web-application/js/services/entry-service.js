@@ -115,7 +115,7 @@ class EntryService {
 				},
 				entryId: 0,
 				description: description,
-				date: date,
+				datetime: date,
 				vendor: vendor,
 				amount: amount,
 			})
