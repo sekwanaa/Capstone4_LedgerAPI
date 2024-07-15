@@ -8,7 +8,6 @@ import org.yearup.models.Entry;
 import javax.sql.DataSource;
 import java.math.BigDecimal;
 import java.sql.*;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.temporal.TemporalAdjuster;
 import java.time.temporal.TemporalAdjusters;
@@ -136,7 +135,7 @@ public class MySqlEntryDao extends MySqlDaoBase implements EntryDao {
             PreparedStatement ps = connection.prepareStatement(createSQL, Statement.RETURN_GENERATED_KEYS);
 
             ps.setString(1, entry.getDescription());
-            ps.setDate(2, entry.getDatetime() == null ? null : entry.getDatetime());
+            ps.setDate(2, entry.getDatetime() == null ? new java.sql.Date(System.currentTimeMillis()) : entry.getDatetime());
             ps.setString(3, entry.getVendor());
             ps.setBigDecimal(4, entry.getAmount());
 
