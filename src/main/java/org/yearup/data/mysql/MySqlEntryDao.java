@@ -8,24 +8,23 @@ import org.yearup.models.Entry;
 import javax.sql.DataSource;
 import java.math.BigDecimal;
 import java.sql.*;
+import java.time.LocalDate;
+import java.time.temporal.TemporalAdjuster;
+import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
 import java.util.List;
 
-//@TODO Fix this to make it work with Entries, not the categories.
 @Component
-public class MySqlEntryDao extends MySqlDaoBase implements EntryDao
-{
+public class MySqlEntryDao extends MySqlDaoBase implements EntryDao {
     @Autowired
-    public MySqlEntryDao(DataSource dataSource)
-    {
+    public MySqlEntryDao(DataSource dataSource) {
         super(dataSource);
     }
 
     @Override
-    public List<Entry> searchEntry(String description, String vendor, BigDecimal minAmount, BigDecimal maxAmount)
-    {
-        List<Entry> entry = new ArrayList<>();
-        StringBuilder query = new StringBuilder("SELECT * FROM entry WHERE 1=1");
+    public List<Entry> searchEntries(String description, String vendor, BigDecimal minAmount, BigDecimal maxAmount, String customReport) {
+        List<Entry> entries = new ArrayList<>();
+        StringBuilder query = new StringBuilder("SELECT * FROM entries WHERE 1=1");
 
         if (description != null && !description.isEmpty()) {
             query.append(" AND description LIKE ?");
@@ -38,6 +37,9 @@ public class MySqlEntryDao extends MySqlDaoBase implements EntryDao
         }
         if (maxAmount != null) {
             query.append(" AND amount <= ?");
+        }
+        if (customReport != null && !customReport.isEmpty()) {
+            query.append(" AND datetime BETWEEN ? AND ?");
         }
 
         try (Connection connection = getConnection()) {
@@ -56,35 +58,57 @@ public class MySqlEntryDao extends MySqlDaoBase implements EntryDao
             if (maxAmount != null) {
                 ps.setBigDecimal(paramIndex++, maxAmount);
             }
+            if (customReport != null && !customReport.isEmpty()) {
+                LocalDate date = LocalDate.now();
+                TemporalAdjuster firstDayOfYear = TemporalAdjusters.firstDayOfYear();
+                TemporalAdjuster firstDayOfMonth = TemporalAdjusters.firstDayOfMonth();
+
+                switch (customReport) {
+                    case "Previous Year" -> {
+                        ps.setObject(paramIndex++, date.minusYears(1).with(firstDayOfYear));
+                        ps.setObject(paramIndex, date.with(firstDayOfYear));
+                    }
+                    case "YTD" -> {
+                        ps.setObject(paramIndex++, date.with(firstDayOfYear));
+                        ps.setObject(paramIndex, date.plusMonths(1));
+                    }
+                    case "Previous Month" -> {
+                        ps.setObject(paramIndex++, date.minusMonths(1).with(firstDayOfMonth));
+                        ps.setObject(paramIndex, date.with(firstDayOfMonth));
+                    }
+                    case "MTD" -> {
+                        ps.setObject(paramIndex++, date.with(firstDayOfMonth));
+                        ps.setObject(paramIndex, date.plusDays(1));
+                    }
+                }
+            }
 
             ResultSet resultSet = ps.executeQuery();
 
             while (resultSet.next()) {
                 Entry entry = mapRow(resultSet);
-                entry.add(entry);
+                entries.add(entry);
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-        return entry;
+        return entries;
     }
 
 
-    private Entry mapRow(ResultSet row) throws SQLException
-    {
+    private Entry mapRow(ResultSet row) throws SQLException {
         int entryId = row.getInt("entry_id");
         String description = row.getString("description");
+        Date datetime = row.getDate("datetime");
         String vendor = row.getString("vendor");
         BigDecimal amount = row.getBigDecimal("amount");
 
-        return new Entry(entryId, description, vendor, amount);
+        return new Entry(entryId, description, datetime, vendor, amount);
     }
 
-}
 
     @Override
-    public Entry getEntryById(int id)
-    {
+    public Entry getEntryById(int id) {
         String query = "SELECT * FROM entries WHERE entry_id = ?";
 
         try (Connection connection = getConnection()) {
@@ -103,16 +127,15 @@ public class MySqlEntryDao extends MySqlDaoBase implements EntryDao
     }
 
     @Override
-    public Entry createEntry(Entry entry)
-    {
+    public Entry createEntry(Entry entry) {
 //TODO Figure out what information I need to insert into the database. Make date and time optional.
-        String createSQL = "INSERT INTO entries (entry_id, description, vendor, amount) VALUES (?, ?, ?, ?)";
+        String createSQL = "INSERT INTO entries (description, datetime, vendor, amount) VALUES (?, ?, ?, ?)";
 
         try (Connection connection = getConnection()) {
             PreparedStatement ps = connection.prepareStatement(createSQL, Statement.RETURN_GENERATED_KEYS);
 
-            ps.setInt(1, entry.getEntryId());
-            ps.setString(2, entry.getDescription());
+            ps.setString(1, entry.getDescription());
+            ps.setDate(2, entry.getDatetime() == null ? new java.sql.Date(System.currentTimeMillis()) : entry.getDatetime());
             ps.setString(3, entry.getVendor());
             ps.setBigDecimal(4, entry.getAmount());
 
@@ -121,7 +144,7 @@ public class MySqlEntryDao extends MySqlDaoBase implements EntryDao
             ResultSet newEntryKey = ps.getGeneratedKeys();
 
             if (newEntryKey.next()) {
-                return getEntryById(newEntryKey.getInt("entry_id"));
+                return getEntryById(newEntryKey.getInt(1));
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -130,8 +153,7 @@ public class MySqlEntryDao extends MySqlDaoBase implements EntryDao
     }
 
     @Override
-    public void updateEntry(int entryId, Entry entry)
-    {
+    public void updateEntry(int entryId, Entry entry) {
 //TODO Make sure the proper fields are getting updated.
         String sql = "UPDATE entries" +
                 " SET description = ? " +
@@ -139,8 +161,7 @@ public class MySqlEntryDao extends MySqlDaoBase implements EntryDao
                 "   , amount = ? " +
                 " WHERE entry_id = ?;";
 
-        try (Connection connection = getConnection())
-        {
+        try (Connection connection = getConnection()) {
             PreparedStatement statement = connection.prepareStatement(sql);
             statement.setString(1, entry.getDescription());
             statement.setString(2, entry.getVendor());
@@ -148,16 +169,13 @@ public class MySqlEntryDao extends MySqlDaoBase implements EntryDao
             statement.setInt(4, entryId);
 
             statement.executeUpdate();
-        }
-        catch (SQLException e)
-        {
+        } catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }
 
     @Override
-    public void deleteEntry(int entryId)
-    {
+    public void deleteEntry(int entryId) {
         String deleteSQL = "DELETE FROM entries WHERE entry_id = ?";
 
         try (Connection connection = getConnection()) {
@@ -170,5 +188,6 @@ public class MySqlEntryDao extends MySqlDaoBase implements EntryDao
             throw new RuntimeException(e);
         }
     }
+}
 
 

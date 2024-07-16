@@ -1,144 +1,102 @@
-document.addEventListener('DOMContentLoaded', loadHome);
-
-const templateBuilder = {
-    build: (template, data, target) => {
-        // Implementation for building template
-    },
-    clear: (target) => {
-        // Implementation for clearing template
-    }
-};
-
-const userService = {
-    login: (username, password) => {
-        // Implementation for user login
-    }
-};
-
-const productService = {
-    search: () => {
-        // Implementation for product search
-    },
-    addCategoryFilter: (category) => {
-        // Implementation for adding category filter
-    },
-    addColorFilter: (color) => {
-        // Implementation for adding color filter
-    },
-    addMinPriceFilter: (price) => {
-        // Implementation for adding minimum price filter
-    },
-    addMaxPriceFilter: (price) => {
-        // Implementation for adding maximum price filter
-    }
-};
-
-const categoryService = {
-    getAllCategories: (callback) => {
-        // Implementation for getting all categories
-        callback();
-    }
-};
-
-const profileService = {
-    loadProfile: () => {
-        // Implementation for loading profile
-    },
-    updateProfile: (profile) => {
-        // Implementation for updating profile
-    }
-};
-
-const cartService = {
-    loadCartPage: () => {
-        // Implementation for loading cart page
-    },
-    clearCart: () => {
-        // Implementation for clearing cart
-    }
-};
-
 function showLoginForm() {
-    templateBuilder.build('login-form', {}, 'login');
+	templateBuilder.build('login-form', {}, 'login')
 }
 
-function hideModalForm() {
-    templateBuilder.clear('login');
+function hideModalForm(type) {
+	templateBuilder.clear(type)
 }
 
 function login() {
-    const username = document.getElementById("username").value;
-    const password = document.getElementById("password").value;
+	const username = document.getElementById('username').value
+	const password = document.getElementById('password').value
 
-    userService.login(username, password);
-    hideModalForm();
-}
-
-function showImageDetailForm(product, imageUrl) {
-    const imageDetail = {
-        name: product,
-        imageUrl: imageUrl
-    };
-
-    templateBuilder.build('image-detail', imageDetail, 'login');
+	userService.login(username, password)
+	hideModalForm('login')
 }
 
 function loadHome() {
-    templateBuilder.build('home', {}, 'main');
-    productService.search();
-    categoryService.getAllCategories(loadCategories);
+	templateBuilder.build('home', {}, 'main')
+
+	entryService.search()
 }
 
 function editProfile() {
-    profileService.loadProfile();
+	profileService.loadProfile()
 }
 
 function saveProfile() {
-    const profile = {
-        firstName: document.getElementById("firstName").value,
-        lastName: document.getElementById("lastName").value,
-        phone: document.getElementById("phone").value,
-        email: document.getElementById("email").value,
-        address: document.getElementById("address").value,
-        city: document.getElementById("city").value,
-        state: document.getElementById("state").value,
-        zip: document.getElementById("zip").value
-    };
+	const firstName = document.getElementById('firstName').value
+	const lastName = document.getElementById('lastName').value
+	const phone = document.getElementById('phone').value
+	const email = document.getElementById('email').value
+	const address = document.getElementById('address').value
+	const city = document.getElementById('city').value
+	const state = document.getElementById('state').value
+	const zip = document.getElementById('zip').value
 
-    profileService.updateProfile(profile);
+	const profile = {
+		firstName,
+		lastName,
+		phone,
+		email,
+		address,
+		city,
+		state,
+		zip,
+	}
+
+	profileService.updateProfile(profile)
 }
 
-function showCart() {
-    cartService.loadCartPage();
+function setFilter(control) {
+	entryService.addFilter(control.value)
+	entryService.search()
 }
 
-function clearCart() {
-    cartService.clearCart();
-    cartService.loadCartPage();
+function setMinAmount(control) {
+	// const slider = document.getElementById("min-price");
+	const label = document.getElementById('min-amount-display')
+	label.innerText = control.value
+
+	const value = control.value != 0 ? control.value : ''
+	entryService.addMinPriceFilter(value)
+	entryService.search()
 }
 
-function setCategory(control) {
-    productService.addCategoryFilter(control.value);
-    productService.search();
+function setMaxAmount(control) {
+	// const slider = document.getElementById("min-price");
+	const label = document.getElementById('max-amount-display')
+	label.innerText = control.value
+
+	const value = control.value != 10000 ? control.value : ''
+	entryService.addMaxPriceFilter(value)
+	entryService.search()
 }
 
-function setColor(control) {
-    productService.addColorFilter(control.value);
-    productService.search();
+function showNewEntryModal() {
+	templateBuilder.build('newEntryForm', {}, 'newEntry')
 }
 
-function setMinPrice(control) {
-    document.getElementById("min-price-display").innerText = control.value;
-    productService.addMinPriceFilter(control.value || "");
-    productService.search();
+function createEntry() {
+	const description = document.getElementById('description').value
+	const date = document.getElementById('date').value
+	const vendor = document.getElementById('vendor').value
+	const amount = document.getElementById('amount').value
+
+	entryService.createEntry(description, date, vendor, amount)
+	hideModalForm('newEntry')
 }
 
-function setMaxPrice(control) {
-    document.getElementById("max-price-display").innerText = control.value;
-    productService.addMaxPriceFilter(control.value != 1500 ? control.value : "");
-    productService.search();
+function deleteEntry(entryId) {
+	entryService.deleteEntry(entryId)
 }
 
 function closeError(control) {
-    setTimeout(() => control.click(), 3000);
+	setTimeout(() => {
+		control.click()
+	}, 3000)
 }
+
+document.addEventListener('DOMContentLoaded', () => {
+	loadHome()
+})

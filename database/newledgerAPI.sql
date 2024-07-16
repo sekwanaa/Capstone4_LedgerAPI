@@ -21,16 +21,16 @@ CREATE SCHEMA IF NOT EXISTS `newledgerapi` DEFAULT CHARACTER SET utf8mb4 COLLATE
 USE `newledgerapi` ;
 
 -- -----------------------------------------------------
--- Table `newledgerapi`.`entry`
+-- Table `newledgerapi`.`entries`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `newledgerapi`.`entry` ;
+DROP TABLE IF EXISTS `newledgerapi`.`entries` ;
 
-CREATE TABLE IF NOT EXISTS `newledgerapi`.`entry` (
+CREATE TABLE IF NOT EXISTS `newledgerapi`.`entries` (
   `entry_id` INT NOT NULL AUTO_INCREMENT,
   `datetime` DATETIME NULL DEFAULT CURRENT_TIMESTAMP,
-  `description` TEXT NULL DEFAULT NULL,
-  `vendor` VARCHAR(255) NULL DEFAULT NULL,
-  `amount` VARCHAR(255) NULL DEFAULT NULL,
+  `description` TEXT NOT NULL,
+  `vendor` VARCHAR(255) NOT NULL,
+  `amount` VARCHAR(255) NOT NULL,
   PRIMARY KEY (`entry_id`))
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4
@@ -60,14 +60,14 @@ DROP TABLE IF EXISTS `newledgerapi`.`profiles` ;
 
 CREATE TABLE IF NOT EXISTS `newledgerapi`.`profiles` (
   `user_id` INT NOT NULL,
-  `first_name` VARCHAR(50) NOT NULL,
-  `last_name` VARCHAR(50) NOT NULL,
-  `phone` VARCHAR(20) NOT NULL,
-  `email` VARCHAR(200) NOT NULL,
-  `address` VARCHAR(200) NOT NULL,
-  `city` VARCHAR(50) NOT NULL,
-  `state` VARCHAR(50) NOT NULL,
-  `zip` VARCHAR(20) NOT NULL,
+  `first_name` VARCHAR(50) NULL DEFAULT NULL,
+  `last_name` VARCHAR(50) NULL DEFAULT NULL,
+  `phone` VARCHAR(20) NULL DEFAULT NULL,
+  `email` VARCHAR(200) NULL DEFAULT NULL,
+  `address` VARCHAR(200) NULL DEFAULT NULL,
+  `city` VARCHAR(50) NULL DEFAULT NULL,
+  `state` VARCHAR(50) NULL DEFAULT NULL,
+  `zip` VARCHAR(20) NULL DEFAULT NULL,
   PRIMARY KEY (`user_id`),
   CONSTRAINT `profiles_ibfk_1`
     FOREIGN KEY (`user_id`)
@@ -80,3 +80,118 @@ COLLATE = utf8mb4_0900_ai_ci;
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
+
+
+INSERT INTO `newledgerapi`.`users`
+(
+`username`,
+`hashed_password`,
+`role`)
+VALUES
+('gary', '$2a$10$Y8UxhFwbRB0t8ciux9QvLevUmwMca4Uf1OfkSpe94F5tPAjirQC3q', 'ROLE_USER');
+
+INSERT INTO `newledgerapi`.`profiles`
+(`user_id`)
+VALUES
+(1);
+
+
+-- -----------------------------------------------------
+-- COMMENT THIS IF YOU DONT WANT FILLER DATA
+-- -----------------------------------------------------
+
+ INSERT INTO `newledgerapi`.`entries` (`description`, `datetime`, `vendor`, `amount`)
+ VALUES ('Office supplies purchase', '2023-09-15 09:30:00', 'Staples', 234.56);
+
+ INSERT INTO `newledgerapi`.`entries` (`description`, `vendor`, `amount`)
+ VALUES ('Monthly rent payment', 'City Center Real Estate', 3500.00);
+
+ INSERT INTO `newledgerapi`.`entries` (`description`, `vendor`, `amount`)
+ VALUES ('Employee health insurance', 'Blue Cross Blue Shield', 4567.89);
+
+ INSERT INTO `newledgerapi`.`entries` (`description`, `datetime`, `vendor`, `amount`)
+ VALUES ('Client lunch meeting', '2022-11-18 13:15:00', 'Chez Louis Restaurant', 189.75);
+
+ INSERT INTO `newledgerapi`.`entries` (`description`, `vendor`, `amount`)
+ VALUES ('Software license renewal', 'Adobe Systems', 1299.99);
+
+ INSERT INTO `newledgerapi`.`entries` (`description`, `datetime`, `vendor`, `amount`)
+ VALUES ('Company vehicle maintenance', '2024-03-20 11:45:00', 'AutoFix Garage', 450.00);
+
+ INSERT INTO `newledgerapi`.`entries` (`description`, `vendor`, `amount`)
+ VALUES ('Marketing campaign', 'Google Ads', 2000.00);
+
+ INSERT INTO `newledgerapi`.`entries` (`description`, `vendor`, `amount`)
+ VALUES ('Office cleaning service', 'CleanPro Inc.', 300.00);
+
+ INSERT INTO `newledgerapi`.`entries` (`description`, `datetime`, `vendor`, `amount`)
+ VALUES ('Employee training workshop', '1999-07-25 09:00:00', 'SkillBoost Academy', 1500.00);
+
+ INSERT INTO `newledgerapi`.`entries` (`description`, `vendor`, `amount`)
+ VALUES ('Utility bill payment', 'City Power & Water', 789.12);
+
+ INSERT INTO `newledgerapi`.`entries` (`description`, `datetime`, `vendor`, `amount`)
+ VALUES ('Client refund', '2023-12-28 14:30:00', 'Johnson Corp', -500.00);
+
+ INSERT INTO `newledgerapi`.`entries` (`description`, `vendor`, `amount`)
+ VALUES ('Office furniture purchase', 'IKEA Business', 2345.67);
+
+ INSERT INTO `newledgerapi`.`entries` (`description`, `vendor`, `amount`)
+ VALUES ('Legal consultation fees', 'Smith & Associates Law Firm', 800.00);
+
+ INSERT INTO `newledgerapi`.`entries` (`description`, `datetime`, `vendor`, `amount`)
+ VALUES ('Team building event', '2022-08-02 13:00:00', 'Adventure Park', 1200.00);
+
+ INSERT INTO `newledgerapi`.`entries` (`description`, `vendor`, `amount`)
+ VALUES ('Cloud storage subscription', 'Amazon AWS', 150.00);
+
+ INSERT INTO `newledgerapi`.`entries` (`description`, `datetime`, `vendor`, `amount`)
+ VALUES ('Business travel expenses', '2024-04-05 07:45:00', 'United Airlines', 876.54);
+
+ INSERT INTO `newledgerapi`.`entries` (`description`, `vendor`, `amount`)
+ VALUES ('Office phone system upgrade', 'TeleCom Solutions', 1999.99);
+
+ INSERT INTO `newledgerapi`.`entries` (`description`, `vendor`, `amount`)
+ VALUES ('Employee performance bonus', 'Jane Doe', 1000.00);
+
+ INSERT INTO `newledgerapi`.`entries` (`description`, `datetime`, `vendor`, `amount`)
+ VALUES ('Networking event sponsorship', '1999-11-10 18:30:00', 'Tech Meetup Group', 500.00);
+
+ INSERT INTO `newledgerapi`.`entries` (`description`, `vendor`, `amount`)
+ VALUES ('Printer ink and toner', 'Office Depot', 345.67);
+
+ INSERT INTO `newledgerapi`.`entries` (`description`, `datetime`, `vendor`, `amount`)
+ VALUES ('Company website redesign', '2023-04-15 10:00:00', 'WebWizards Agency', 3500.00);
+
+ INSERT INTO `newledgerapi`.`entries` (`description`, `vendor`, `amount`)
+ VALUES ('Employee retirement plan contribution', 'Fidelity Investments', 5000.00);
+
+ INSERT INTO `newledgerapi`.`entries` (`description`, `vendor`, `amount`)
+ VALUES ('Office snacks and beverages', 'Costco Wholesale', 250.00);
+
+ INSERT INTO `newledgerapi`.`entries` (`description`, `datetime`, `vendor`, `amount`)
+ VALUES ('Professional membership dues', '2022-04-20 09:15:00', 'Industry Association', 400.00);
+
+ INSERT INTO `newledgerapi`.`entries` (`description`, `vendor`, `amount`)
+ VALUES ('Cybersecurity software', 'Norton Security', 799.99);
+
+ INSERT INTO `newledgerapi`.`entries` (`description`, `datetime`, `vendor`, `amount`)
+ VALUES ('Client appreciation gift', '2024-04-25 11:30:00', 'Gourmet Gift Baskets', 150.00);
+
+ INSERT INTO `newledgerapi`.`entries` (`description`, `vendor`, `amount`)
+ VALUES ('Office plant maintenance', 'Green Thumb Services', 75.00);
+
+ INSERT INTO `newledgerapi`.`entries` (`description`, `vendor`, `amount`)
+ VALUES ('Business insurance premium', 'AllState Business', 2500.00);
+
+ INSERT INTO `newledgerapi`.`entries` (`description`, `datetime`, `vendor`, `amount`)
+ VALUES ('Employee wellness program', '2023-10-30 14:00:00', 'FitLife Corp', 1000.00);
+
+ INSERT INTO `newledgerapi`.`entries` (`description`, `vendor`, `amount`)
+ VALUES ('Office air conditioning repair', 'Cool Breeze HVAC', 567.89);
+
+ INSERT INTO `newledgerapi`.`entries` (`description`, `datetime`, `vendor`, `amount`)
+ VALUES ('Trade show exhibition fees', '1999-05-05 08:00:00', 'Industry Expo', 3000.00);
+
+ INSERT INTO `newledgerapi`.`entries` (`description`, `vendor`, `amount`)
+ VALUES ('Employee parking reimbursement', 'City Parking Authority', 200.00);
