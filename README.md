@@ -9,9 +9,9 @@
 
   ### Table of Contents
   
-* [Features](https://github.com/sekwanaa/Capstone4_LedgerAPI#features)
-* [A look into the application](https://github.com/sekwanaa/Capstone4_LedgerAPI#a-look-into-the-application)
-* [Check out the website!](https://github.com/sekwanaa/Capstone4_LedgerAPI#checkout-the-website)
+* [Features](https://github.com/sekwanaa/LedgerAPI#features)
+* [A look into the application](https://github.com/sekwanaa/LedgerAPI#a-look-into-the-application)
+* [Check out the website!](https://github.com/sekwanaa/LedgerAPI#checkout-the-website)
   
 ### Features
 * Login / Register
